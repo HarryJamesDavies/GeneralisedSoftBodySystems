@@ -99,7 +99,7 @@ void Base::InitialisePhysics()
 	m_globalData->m_physicsManager->m_physicsData.m_gravityCoefficient = 0.0f;
 	m_globalData->m_physicsManager->m_physicsData.m_velocityLimit = 100.0f;
 	m_globalData->m_physicsManager->m_physicsData.m_springCoefficient = 25.0f;
-	m_globalData->m_physicsManager->m_physicsData.m_dampingCoefficient = 10.0f;
+	m_globalData->m_physicsManager->m_physicsData.m_dampingCoefficient = 5.0f;
 	m_globalData->m_physicsManager->m_physicsData.m_pressureCoefficient = 20.0f;
 	m_globalData->m_physicsManager->m_physicsData.m_forceFieldCoefficient = 10.0f;
 	m_globalData->m_physicsManager->m_physicsData.m_forceFieldRadius = 15.0f;
