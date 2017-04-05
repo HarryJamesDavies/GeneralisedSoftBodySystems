@@ -37,7 +37,7 @@ void MSOChain::Initilaise(bool _generateInternals, ID3D11Device* _ID)
 {
 	SetScale(1.0f);
 
-	m_mesh->Set3D(false);
+	m_mesh->Set3D(true);
 	TriangulateVertices* math = new TriangulateVertices();
 
 	//Generates vertex mesh
@@ -49,6 +49,12 @@ void MSOChain::Initilaise(bool _generateInternals, ID3D11Device* _ID)
 	//Generates mass/spring structure
 	m_mesh->CreateMasses1D(m_numVerts, m_width, m_height, m_numSections);
 	m_mesh->CreateSprings1D(m_numSections);
+
+	if (_generateInternals)
+	{
+		m_mesh->CreateInternalMasses();
+		m_mesh->CreateInternalSprings();
+	}
 
 	delete(math);
 

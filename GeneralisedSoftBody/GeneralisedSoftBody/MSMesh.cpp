@@ -526,44 +526,47 @@ void MSMesh::CreateFromFile(const char* _fileName)
 			}
 			else if (type == "INTMASSES:")
 			{
-				//Reads in surface masses
+				//Reads in internal masses
 				int numberOfInternalMasses = 0;
 				in >> numberOfInternalMasses;
-				for (int internalIter = 0; internalIter <= numberOfInternalMasses - 1; internalIter++)
+
+				if (numberOfInternalMasses != 0)
 				{
-					//Gets surface mass data
-					Vector3 pos = Vector3(0.0, 0.0, 0.0);
-					float mass = 0.0;
-					bool fixed = 0;
+					for (int internalIter = 0; internalIter <= numberOfInternalMasses - 1; internalIter++)
+					{
+						//Gets surface mass data
+						Vector3 pos = Vector3(0.0, 0.0, 0.0);
+						float mass = 0.0;
+						bool fixed = 0;
 
-					std::getline(infile, line);
+						std::getline(infile, line);
 
-					//Gets position
-					std::getline(infile, line);
-					std::istringstream posLine(line);
-					posLine.ignore(line.length(), ':');
-					posLine >> pos.x >> pos.y >> pos.z;
+						//Gets position
+						std::getline(infile, line);
+						std::istringstream posLine(line);
+						posLine.ignore(line.length(), ':');
+						posLine >> pos.x >> pos.y >> pos.z;
 
-					//Gets mass value
-					std::getline(infile, line);
-					std::istringstream massLine(line);
-					massLine.ignore(line.length(), ':');
-					massLine >> mass;
+						//Gets mass value
+						std::getline(infile, line);
+						std::istringstream massLine(line);
+						massLine.ignore(line.length(), ':');
+						massLine >> mass;
 
-					//Gets fixed flag
-					std::getline(infile, line);
-					std::istringstream fixedLine(line);
-					fixedLine.ignore(line.length(), ':');
-					fixedLine >> fixed;
-					
-					//Generates mass based on parameters
-					m_internalMasses.push_back(new MSMass(internalIter, mass, pos, this, fixed, false));
+						//Gets fixed flag
+						std::getline(infile, line);
+						std::istringstream fixedLine(line);
+						fixedLine.ignore(line.length(), ':');
+						fixedLine >> fixed;
 
-					//Skips neighbours until all masses are generated
-					std::getline(infile, line);
-					std::getline(infile, line);
-					std::getline(infile, line);
+						//Generates mass based on parameters
+						m_internalMasses.push_back(new MSMass(internalIter, mass, pos, this, fixed, false));
 
+						//Skips neighbours until all masses are generated
+						std::getline(infile, line);
+						std::getline(infile, line);
+						std::getline(infile, line);
+					}
 				}
 			}
 			else if (type == "TRIANGLES:")
@@ -695,7 +698,11 @@ void MSMesh::CreateFromFile(const char* _fileName)
 					std::istringstream oppositeLine(line);
 					oppositeLine.ignore(line.length(), ':');
 					oppositeLine >> opposite;
-					mass->AssignOpposingMass(GetMass(opposite));
+
+					if (opposite != -1)
+					{
+						mass->AssignOpposingMass(GetMass(opposite));
+					}
 				}
 			}
 			else if (type == "INTMASSES:")
@@ -703,39 +710,43 @@ void MSMesh::CreateFromFile(const char* _fileName)
 				//Reads in internal mass neighbours
 				int numberOfInternalMasses = 0;
 				in >> numberOfInternalMasses;
-				for (int internalIter = 0; internalIter <= numberOfInternalMasses - 1; internalIter++)
+
+				if(numberOfInternalMasses != 0)
 				{
-					int numberOfNeighbours = 0;
-					int opposite = 0;
-
-					MSMass* mass = GetExternalMass(internalIter);
-
-					//Skips all mass data until neighbour data
-					std::getline(infile, line);
-					std::getline(infile, line);
-					std::getline(infile, line);
-					std::getline(infile, line);
-
-					//Reads in structural neighbour indices
-					std::getline(infile, line);
-					std::istringstream single(line);
-					single.ignore(line.length(), ':');
-					single >> numberOfNeighbours;
-					std::getline(infile, line);
-					std::istringstream neighbourLine(line);
-					for (int neighbourIter = 0; neighbourIter <= numberOfNeighbours - 1; neighbourIter++)
+					for (int internalIter = 0; internalIter <= numberOfInternalMasses - 1; internalIter++)
 					{
-						int neighbour = -1;
-						neighbourLine >> neighbour;
-						mass->AddNeighbour(GetMass(neighbour));
-					}
+						int numberOfNeighbours = 0;
+						int opposite = 0;
 
-					//Reads in opposing mass index
-					std::getline(infile, line);
-					std::istringstream oppositeLine(line);
-					oppositeLine.ignore(line.length(), ':');
-					oppositeLine >> opposite;
-					mass->AssignOpposingMass(GetMass(opposite));
+						MSMass* mass = GetExternalMass(internalIter);
+
+						//Skips all mass data until neighbour data
+						std::getline(infile, line);
+						std::getline(infile, line);
+						std::getline(infile, line);
+						std::getline(infile, line);
+
+						//Reads in structural neighbour indices
+						std::getline(infile, line);
+						std::istringstream single(line);
+						single.ignore(line.length(), ':');
+						single >> numberOfNeighbours;
+						std::getline(infile, line);
+						std::istringstream neighbourLine(line);
+						for (int neighbourIter = 0; neighbourIter <= numberOfNeighbours - 1; neighbourIter++)
+						{
+							int neighbour = -1;
+							neighbourLine >> neighbour;
+							mass->AddNeighbour(GetMass(neighbour));
+						}
+
+						//Reads in opposing mass index
+						std::getline(infile, line);
+						std::istringstream oppositeLine(line);
+						oppositeLine.ignore(line.length(), ':');
+						oppositeLine >> opposite;
+						mass->AssignOpposingMass(GetMass(opposite));
+					}
 				}
 			}
 		}
@@ -811,6 +822,10 @@ void MSMesh::SaveMesh()
 		{
 			outfile << "	Opposing: " << std::fixed << opposingMass->GetIndex() << std::endl;
 		}
+		else
+		{
+			outfile << "	Opposing: " << std::fixed << -1 << std::endl;
+		}
 	}
 	outfile << std::endl;
 
@@ -859,5 +874,4 @@ void MSMesh::SaveMesh()
 	outfile << std::endl;
 
 	outfile.close();
-
 }
