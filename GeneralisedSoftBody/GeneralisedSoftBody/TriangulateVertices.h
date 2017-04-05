@@ -1,3 +1,7 @@
+//=================================================================
+// Generate polygons based on vertices and indices data
+//=================================================================
+
 #ifndef _TRIANGULATE_VERTICES_H_
 #define _TRIANGULATE_VERTICES_H_
 #include <list>

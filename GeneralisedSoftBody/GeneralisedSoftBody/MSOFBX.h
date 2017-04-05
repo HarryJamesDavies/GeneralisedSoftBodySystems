@@ -1,3 +1,7 @@
+//=================================================================
+// Mass/spring FBX file object
+//=================================================================
+
 #ifndef _MSO_FBX_H_
 #define _MSO_FBX_H_
 #include "VertexMSO.h"
@@ -9,7 +13,6 @@ public:
 	MSOFBX(const char* _fileName, std::string _name, bool _internal, GlobalData* _GD);
 	~MSOFBX();
 
-	//Initialise the Vertex and Index buffers for the cube
 	void Initilaise(bool _internal, ID3D11Device* _ID);
 
 	virtual void Tick(GlobalData* _GD) { VertexMSO::Tick(_GD); };
@@ -18,10 +21,8 @@ public:
 private:
 	void CreateVertices();
 
+	//FBX file name
 	const char* m_fileName;
-
-private:
-
 };
 
 #endif;

@@ -1,3 +1,7 @@
+//=================================================================
+// Managers the user interface and interactions
+//=================================================================
+
 #include "GUIManager.h"
 #include "MSOManager.h"
 #include "MSOTypes.h"
@@ -17,6 +21,7 @@ GUIManager::GUIManager()
 	m_createFile = false;
 	m_spawnFile = false;
 
+	//Resets file name variable
 	m_fileName = new char[100];
 	for (int iter = 0; iter <= 102; iter++)
 	{
@@ -30,6 +35,7 @@ GUIManager::~GUIManager()
 	TwTerminate();
 }
 
+//Initialise GUI Systems
 void GUIManager::Initialise(GlobalData* _GD)
 {
 	m_GD = _GD;
@@ -42,15 +48,19 @@ void GUIManager::Initialise(GlobalData* _GD)
 	CreatePhysicsBar();
 }
 
+//Checks for changes in flags and enums
 void GUIManager::Update()
 {
+	//Determines whether a new Primitive tool bar should be spawned
 	if (m_createPrimitive)
 	{
 		m_createPrimitive = false;
 
+		//Deletes previous object tool bar
 		TwDeleteBar(msoBar);
 		msoBar = nullptr;
 
+		//Creates primitve tool bar
 		switch (m_GD->m_MSOManager->m_currentType)
 		{
 		case MSOTypes::CHAIN:
@@ -75,10 +85,12 @@ void GUIManager::Update()
 		}
 	}
 
+	//Spawns primitive MSO
 	if (m_spawnPrimitive)
 	{
 		m_spawnPrimitive = false;
 
+		//Pause object when spawned into the scene
 		if (m_pauseOnSpawn)
 		{
 			m_GD->m_MSOManager->m_pauseObject = true;
@@ -87,13 +99,16 @@ void GUIManager::Update()
 		m_GD->m_MSOManager->CreateMSOPrimitive(m_GD);
 	}
 
+	//Creates MSO file too bar
 	if (m_createFile)
 	{
 		m_createFile = false;
 
+		//Deletes previous object tool bar
 		TwDeleteBar(msoBar);
 		msoBar = nullptr;
 
+		//Resets file name
 		m_fileName = new char[100];
 		for (int iter = 0; iter <= 102; iter++)
 		{
@@ -103,15 +118,18 @@ void GUIManager::Update()
 		CreateFileBar();
 	}
 
+	//Spawns MSO file object
 	if (m_spawnFile)
 	{
 		m_spawnFile = false;
 
+		//Pause object when spawned into the scene
 		if (m_pauseOnSpawn)
 		{
 			m_GD->m_MSOManager->m_pauseObject = true;
 		}
 
+		//Resets file name
 		char* fileName = new char[100];
 		for (int iter = 0; iter <= 100; iter++)
 		{
@@ -120,6 +138,7 @@ void GUIManager::Update()
 
 		char temp[19] = "../Assets/MSO/.txt";
 
+		//Dynamically reates prefix and suffix for file name
 		int presetIter = 0;
 		int dynamicIter = 0;
 		for (int iter = 0; iter <= 100; iter++)
@@ -147,6 +166,7 @@ void GUIManager::Update()
 			}
 		}
 
+		//Checks whether file exists
 		std::ifstream infile;
 		infile.open(fileName);
 
@@ -157,13 +177,17 @@ void GUIManager::Update()
 		}
 	}
 
+
+	//Creates FBX tool bar
 	if (m_createFBX)
 	{
 		m_createFBX = false;
 
+		//Deletes previous object tool bar
 		TwDeleteBar(msoBar);
 		msoBar = nullptr;
 
+		//Resets file name
 		m_fileName = new char[100];
 		for (int iter = 0; iter <= 102; iter++)
 		{
@@ -173,15 +197,18 @@ void GUIManager::Update()
 		CreateFBXBar();
 	}
 
+	//Spawns FBX MSO 
 	if (m_spawnFBX)
 	{
 		m_spawnFBX = false;
 
+		//Pause object when spawned into the scene
 		if (m_pauseOnSpawn)
 		{
 			m_GD->m_MSOManager->m_pauseObject = true;
 		}
 
+		//Resets file name
 		char* fileName = new char[100];
 		for (int iter = 0; iter <= 100; iter++)
 		{
@@ -190,6 +217,7 @@ void GUIManager::Update()
 
 		char temp[21] = "../Assets/ASCII/.ase";
 
+		//Dynamically reates prefix and suffix for file name
 		int presetIter = 0;
 		int dynamicIter = 0;
 		for (int iter = 0; iter <= 100; iter++)
@@ -216,6 +244,8 @@ void GUIManager::Update()
 				}
 			}
 		}
+
+		//Checks whether file exists
 		std::ifstream infile;
 		infile.open(fileName);
 
@@ -226,13 +256,15 @@ void GUIManager::Update()
 		}
 	}
 
-	if (m_savePrimitive)
+	//Save MSO to Text file
+	if (m_saveMSO)
 	{
-		m_savePrimitive = false;
+		m_saveMSO = false;
 		m_GD->m_MSOManager->SaveMSO(m_GD);
 	}
 }
 
+//Creates MSO Manager tool bar
 void GUIManager::CreateMSOManagerBar()
 {
 	msoManagerBar = TwNewBar("MSO Parameters");
@@ -257,6 +289,7 @@ void GUIManager::CreateMSOManagerBar()
 	TwAddVarRW(msoManagerBar, "Create Primitive", TW_TYPE_BOOL16, &m_createPrimitive, "group=SpawnPrimitiveObject key=InternalFlag");
 }
 
+//Creates physics tool bar
 void GUIManager::CreatePhysicsBar()
 {
 	physicsBar = TwNewBar("Physics Parameters");
@@ -281,6 +314,7 @@ void GUIManager::CreatePhysicsBar()
 	TwAddVarRW(physicsBar, "Wind Direction", TW_TYPE_DIR3F, &m_GD->m_physicsManager->m_physicsData.m_windDirection, "opened=false group=WindParameters key=Wind Direction");
 }
 
+//Creates MSO file object tool bar
 void GUIManager::CreateFileBar()
 {
 	msoBar = TwNewBar("MSO File Parameters");
@@ -288,6 +322,11 @@ void GUIManager::CreateFileBar()
 	TwSetParam(msoBar, NULL, "position", TW_PARAM_INT32, 2, &position);
 
 	char temp[100];
+
+	for (int i = 0; i <= 100; i++)
+	{
+		temp[i] = ' ';
+	}
 
 	TwAddVarRW(msoBar, "Spawn File Object", TW_TYPE_BOOL16, &m_spawnFile, "group=ObjectParameters key=InternalFlag");
 	TwAddVarRW(msoBar, "File Name", TW_TYPE_CSSTRING(sizeof(temp)), m_fileName, "group=ObjectParameters key=InternalFlag");
@@ -300,9 +339,10 @@ void GUIManager::CreateFileBar()
 	TwType dimensionType = TwDefineEnum("Fix Dimension", dimensionEV, 3);
 	TwAddVarRW(msoBar, "Fix Dimension", dimensionType, &m_GD->m_MSOManager->m_fixDimension, "group=FixParameters key=ObjectType");
 
-	TwAddVarRW(msoBar, "Save Object", TW_TYPE_BOOL16, &m_savePrimitive, "group=Save key=InternalFlag");
+	TwAddVarRW(msoBar, "Save Object", TW_TYPE_BOOL16, &m_saveMSO, "group=Save key=InternalFlag");
 }
 
+//Creates MSO FBX object tool bar
 void GUIManager::CreateFBXBar()
 {
 	msoBar = TwNewBar("MSO FBX Parameters");
@@ -310,6 +350,11 @@ void GUIManager::CreateFBXBar()
 	TwSetParam(msoBar, NULL, "position", TW_PARAM_INT32, 2, &position);
 
 	char temp[100];
+
+	for (int i = 0; i <= 100; i++)
+	{
+		temp[i] = ' ';
+	}
 
 	TwAddVarRW(msoBar, "Spawn File Object", TW_TYPE_BOOL16, &m_spawnFBX, "group=ObjectParameters key=InternalFlag");
 	TwAddVarRW(msoBar, "File Name", TW_TYPE_CSSTRING(sizeof(temp)), m_fileName, "group=ObjectParameters key=InternalFlag");
@@ -322,9 +367,10 @@ void GUIManager::CreateFBXBar()
 	TwType dimensionType = TwDefineEnum("Fix Dimension", dimensionEV, 3);
 	TwAddVarRW(msoBar, "Fix Dimension", dimensionType, &m_GD->m_MSOManager->m_fixDimension, "group=FixParameters key=ObjectType");
 
-	TwAddVarRW(msoBar, "Save Object", TW_TYPE_BOOL16, &m_savePrimitive, "group=Save key=InternalFlag");
+	TwAddVarRW(msoBar, "Save Object", TW_TYPE_BOOL16, &m_saveMSO, "group=Save key=InternalFlag");
 }
 
+//Creates MSO chain primitive tool bar
 void GUIManager::CreateChainBar()
 {
 	msoBar = TwNewBar("MSO Chain Parameters");
@@ -344,9 +390,10 @@ void GUIManager::CreateChainBar()
 	TwType dimensionType = TwDefineEnum("Fix Dimension", dimensionEV, 3);
 	TwAddVarRW(msoBar, "Fix Dimension", dimensionType, &m_GD->m_MSOManager->m_fixDimension, "group=FixParameters key=ObjectType");
 
-	TwAddVarRW(msoBar, "Save Object", TW_TYPE_BOOL16, &m_savePrimitive, "group=Save key=InternalFlag");
+	TwAddVarRW(msoBar, "Save Object", TW_TYPE_BOOL16, &m_saveMSO, "group=Save key=InternalFlag");
 }
 
+//Creates MSO square primitive tool bar
 void GUIManager::CreateSquareBar()
 {
 	msoBar = TwNewBar("MSO Square Parameters");
@@ -367,9 +414,10 @@ void GUIManager::CreateSquareBar()
 	TwType dimensionType = TwDefineEnum("Fix Dimension", dimensionEV, 3);
 	TwAddVarRW(msoBar, "Fix Dimension", dimensionType, &m_GD->m_MSOManager->m_fixDimension, "group=FixParameters key=ObjectType");
 
-	TwAddVarRW(msoBar, "Save Object", TW_TYPE_BOOL16, &m_savePrimitive, "group=Save key=InternalFlag");
+	TwAddVarRW(msoBar, "Save Object", TW_TYPE_BOOL16, &m_saveMSO, "group=Save key=InternalFlag");
 }
 
+//Creates MSO cube primitive tool bar
 void GUIManager::CreateCubeBar()
 {
 	msoBar = TwNewBar("MSO Cube Parameters");
@@ -392,5 +440,5 @@ void GUIManager::CreateCubeBar()
 	TwType dimensionType = TwDefineEnum("Fix Dimension", dimensionEV, 3);
 	TwAddVarRW(msoBar, "Fix Dimension", dimensionType, &m_GD->m_MSOManager->m_fixDimension, "group=FixParameters key=ObjectType");
 
-	TwAddVarRW(msoBar, "Save Object", TW_TYPE_BOOL16, &m_savePrimitive, "group=Save key=InternalFlag");
+	TwAddVarRW(msoBar, "Save Object", TW_TYPE_BOOL16, &m_saveMSO, "group=Save key=InternalFlag");
 }

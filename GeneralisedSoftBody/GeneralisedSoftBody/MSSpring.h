@@ -1,3 +1,7 @@
+//=================================================================
+// Spring used to calculate the resistance force when compressed or stretched between masses
+//=================================================================
+
 #ifndef _M_S_SPRING_H_
 #define _M_S_SPRING_H_
 #include "d3d11_1.h"
@@ -26,8 +30,6 @@ public:
 	MSMass* GetMassA() { return m_massA; };
 	MSMass* GetMassB() { return m_massB; };
 
-	Vector3 GetNormal() { return m_normal; };
-
 	void SetMassPressure(float _pressure);
 
 	bool ContainsMass(MSMass* _mass);
@@ -41,7 +43,6 @@ private:
 
 	float m_massDistance;
 	float m_force;
-	Vector3 m_normal;
 
 	int m_index;
 };

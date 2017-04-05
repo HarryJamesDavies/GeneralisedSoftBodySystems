@@ -1,3 +1,7 @@
+//=================================================================
+// Mass/spring object manager
+//=================================================================
+
 #include "MSOManager.h"
 #include "MSOFile.h"
 #include "MSOFBX.h"
@@ -18,17 +22,16 @@ MSOManager::MSOManager(GlobalData* _GD)
 	m_height = 15;
 	m_depth = 15;
 
-	m_prevType = MSOTypes::SQUARE;
-	m_currentType = MSOTypes::SQUARE;
+	m_prevType = MSOTypes::CUBE;
+	m_currentType = MSOTypes::CUBE;
 	m_currentMSOName = "";
-
-	//CreateMSOPrimitive(_GD);
 }
 
 MSOManager::~MSOManager()
 {
 }
 
+//Generates MSO Primitive from list of enums
 void MSOManager::CreateMSOPrimitive(GlobalData* _GD)
 {
 	DeleteMSO(_GD);
@@ -37,6 +40,7 @@ void MSOManager::CreateMSOPrimitive(GlobalData* _GD)
 	{
 	case MSOTypes::CHAIN:
 	{
+		//Create 1D chain of masses
 		MSOChain* MSChain = new MSOChain(m_width, m_height, m_sectionsX, m_internal, _GD);
 		_GD->m_gameObjectPool->StoreGameObject(MSChain);
 		m_currentMSOName = MSChain->GetName();
@@ -44,6 +48,7 @@ void MSOManager::CreateMSOPrimitive(GlobalData* _GD)
 	}
 	case MSOTypes::SQUARE:
 	{
+		//Creates 2D square of masses
 		MSOSquare* MSSquare = new MSOSquare(m_width, m_height, Vector2(static_cast<float>(m_sectionsX), static_cast<float>(m_sectionsY)), m_internal, _GD);
 		_GD->m_gameObjectPool->StoreGameObject(MSSquare);
 		m_currentMSOName = MSSquare->GetName();
@@ -51,6 +56,7 @@ void MSOManager::CreateMSOPrimitive(GlobalData* _GD)
 	}
 	case MSOTypes::CUBE:
 	{
+		//Creates 3D cube of masses
 		MSOCube* MSCube = new MSOCube(m_width, m_height, m_depth, Vector3(static_cast<float>(m_sectionsX), static_cast<float>(m_sectionsY), static_cast<float>(m_sectionsZ)), m_internal, _GD);
 		_GD->m_gameObjectPool->StoreGameObject(MSCube);
 		m_currentMSOName = MSCube->GetName();
@@ -63,23 +69,19 @@ void MSOManager::CreateMSOPrimitive(GlobalData* _GD)
 	return;
 }
 
+//Generates MSO from MSO Text file with name: _fileName
 void MSOManager::CreateMSOFile(const char* _fileName, std::string _name, GlobalData* _GD)
 {
 	DeleteMSO(_GD);
 
-	std::ifstream infile;
-	infile.open(_fileName);
-
-	if (infile.good())
-	{
-		MSOFile* MSFile = new MSOFile(_fileName, _name, _GD);
-		_GD->m_gameObjectPool->StoreGameObject(MSFile);
-		m_currentMSOName = MSFile->GetName();
-	}
+	MSOFile* MSFile = new MSOFile(_fileName, _name, _GD);
+	_GD->m_gameObjectPool->StoreGameObject(MSFile);
+	m_currentMSOName = MSFile->GetName();
 
 	return;
 }
 
+//Generates MSO from ASCII FBX file with name: _fileName
 void MSOManager::CreateMSOFBX(const char* _fileName, std::string _name, GlobalData* _GD)
 {
 	DeleteMSO(_GD);
@@ -91,12 +93,14 @@ void MSOManager::CreateMSOFBX(const char* _fileName, std::string _name, GlobalDa
 	return;
 }
 
+//Deletes the current MSO
 void MSOManager::DeleteMSO(GlobalData* _GD)
 {
 	_GD->m_gameObjectPool->DeleteObject(m_currentMSOName);
 	return;
 }
 
+//Saves the current MSO
 void MSOManager::SaveMSO(GlobalData* _GD)
 {
 	VertexMSO* object = (VertexMSO*)_GD->m_gameObjectPool->GetGameObject(m_currentMSOName, ObjectLayer::OL_NULL);

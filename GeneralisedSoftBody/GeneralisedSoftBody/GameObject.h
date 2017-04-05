@@ -1,9 +1,9 @@
-#ifndef _GAME_OBJECT_H
-#define _GAME_OBJECT_H
-
 //=================================================================
 //Base Game Object Class
 //=================================================================
+
+#ifndef _GAME_OBJECT_H
+#define _GAME_OBJECT_H
 #include <d3d11_1.h>
 #include "CommonStates.h"
 #include "SimpleMath.h"
@@ -64,7 +64,7 @@ public:
 
 
 protected:
-
+	//Sets object to be visable in scene
 	bool m_drawable;
 
 	//World transform/matrix of this GO and it components
@@ -75,6 +75,7 @@ protected:
 	float m_pitch, m_yaw, m_roll;
 	Vector3 m_scale;
 
+	//Object identifiers
 	std::string m_name;
 	ObjectTag m_tag;
 	ObjectLayer m_layer;

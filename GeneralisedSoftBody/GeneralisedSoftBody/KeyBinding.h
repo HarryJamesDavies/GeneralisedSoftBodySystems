@@ -1,3 +1,7 @@
+//=================================================================
+// Keybindings for player controls
+//=================================================================
+
 #ifndef _KEY_BINDING_H_
 #define _KEY_BINDING_H_
 #include "Keyboard.h"

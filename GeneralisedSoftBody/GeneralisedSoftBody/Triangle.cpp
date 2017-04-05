@@ -1,3 +1,6 @@
+//=================================================================
+// Triangle structure used inconjunction with vertices and indices to define meshes
+//=================================================================
 #include "Triangle.h"
 #include "Edge.h"
 

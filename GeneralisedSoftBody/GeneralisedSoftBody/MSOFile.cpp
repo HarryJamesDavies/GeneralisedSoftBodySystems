@@ -1,3 +1,7 @@
+//=================================================================
+// Mass/spring MSO Text file object
+//=================================================================
+
 #include "MSOFile.h"
 #include "MSMesh.h"
 #include "GlobalData.h"
@@ -30,17 +34,22 @@ MSOFile::~MSOFile()
 
 }
 
+//Generates all vertex and mass/spring structures
 void MSOFile::Initilaise(ID3D11Device* _ID)
 {
 	TriangulateVertices* math = new TriangulateVertices();
 
+	//Generates vertex mesh
 	CreateVertices();
 	CreateIntialVertices();
 	math->CalculateTriangles(&m_triangles, m_vertices, m_indices, m_numPrims);
 	UpdateNormals();
+
+	//Generates mass/spring structure
 	m_mesh->CreateFromFile(m_fileName);
 	m_mesh->UpdateNormals();
 
+	//Builds GPU Buffers
 	BuildDIB(_ID, m_indices);
 	BuildDVB(_ID, m_numVerts, m_vertices);
 
@@ -61,6 +70,7 @@ void MSOFile::Initilaise(ID3D11Device* _ID)
 	HRESULT hr = _ID->CreateRasterizerState(&rasterDesc, &m_pRasterState);
 }
 
+//Reads in vertices and indices from MSO Text file
 void MSOFile::CreateVertices()
 {
 	std::ifstream infile;
@@ -68,6 +78,7 @@ void MSOFile::CreateVertices()
 
 	while (infile.good())
 	{
+		//Loops until then of the end of the file is reached
 		std::string line;
 		while (std::getline(infile, line))
 		{
@@ -78,12 +89,14 @@ void MSOFile::CreateVertices()
 
 			if (type == "3D:")
 			{
-				int temp3D = 0;
+				//Reads in flag which determines whether the object has internal space
+				bool temp3D = 0;
 				in >> temp3D;
-				m_mesh->Set3D(static_cast<bool>(temp3D));
+				m_mesh->Set3D(temp3D);
 			}
 			else if (type == "VERTICES:")
 			{
+				//Reads in and create vertex data
 				in >> m_numVerts;
 				m_vertices = new Vertex[m_numVerts];
 				for (int vertexIter = 0; vertexIter <= m_numVerts - 1; vertexIter++)
@@ -104,6 +117,7 @@ void MSOFile::CreateVertices()
 			}
 			else if (type == "INDICES:")
 			{
+				//Reads in and creates indicies data
 				int numIndicies = 0;
 				in >> numIndicies;
 				m_numPrims = numIndicies / 3;

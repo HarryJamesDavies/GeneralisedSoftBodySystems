@@ -1,3 +1,7 @@
+//=================================================================
+// Mass/spring FBX file object
+//=================================================================
+
 #include "MSOFBX.h"
 #include "MSMesh.h"
 #include "GlobalData.h"
@@ -29,20 +33,23 @@ MSOFBX::~MSOFBX()
 
 }
 
+//Generates all vertex and mass/spring structures
 void MSOFBX::Initilaise(bool _internal, ID3D11Device* _ID)
 {
 	m_mesh->Set3D(true);
 
 	TriangulateVertices* math = new TriangulateVertices();
 
+	//Generates vertex mesh
 	CreateVertices();
 	CreateIntialVertices();
 	UpdateNormals();
 	math->CalculateTriangles(&m_triangles, m_vertices, m_indices, m_numPrims);
+
+	//Generates mass/spring structure
 	m_mesh->CreateSurfaceMasses(m_numVerts, m_triangles.size(), m_triangles.begin(), m_triangles.end());
 	m_mesh->CreateSurfaceSprings();
 	m_mesh->UpdateNormals();
-
 	if (_internal)
 	{
 		m_mesh->CreateInternalMasses();
@@ -51,6 +58,7 @@ void MSOFBX::Initilaise(bool _internal, ID3D11Device* _ID)
 
 	delete(math);
 
+	//Builds GPU Buffers
 	BuildDIB(_ID, m_indices);
 	BuildDVB(_ID, m_numVerts, m_vertices);
 
@@ -71,6 +79,7 @@ void MSOFBX::Initilaise(bool _internal, ID3D11Device* _ID)
 	HRESULT hr = _ID->CreateRasterizerState(&rasterDesc, &m_pRasterState);
 }
 
+//Reads in vertex and indicies data from FBX file
 void MSOFBX::CreateVertices()
 {
 	std::ifstream infile;
@@ -81,6 +90,8 @@ void MSOFBX::CreateVertices()
 		int vertexIter = 0;
 		int indexIter = 0;
 		std::string line;
+
+		//Loops until then of the end of the file is reached
 		while (std::getline(infile, line))
 		{
 			std::istringstream in(line);
@@ -90,17 +101,19 @@ void MSOFBX::CreateVertices()
 
 			if (type == "*MESH_NUMVERTEX")
 			{
+				//Reads in vertex number
 				in >> m_numVerts;
 				m_vertices = new Vertex[m_numVerts];
-
 			}
 			else if (type == "*MESH_NUMFACES")
 			{
+				//Reads in polygon count
 				in >> m_numPrims;
 				m_indices = new WORD[m_numPrims * 3];
 			}
 			else if (type == "*MESH_VERTEX")
 			{
+				//Reads in vertex data
 				in >> vertexIter;
 				in >> m_vertices[vertexIter].Pos.x;
 				in >> m_vertices[vertexIter].Pos.y;
@@ -109,6 +122,7 @@ void MSOFBX::CreateVertices()
 			}
 			else if (type == "*MESH_FACE")
 			{
+				//Reads in polygon data
 				in.ignore(line.length(), ':');
 				in.ignore(line.length(), ':');
 				in >> m_indices[indexIter];

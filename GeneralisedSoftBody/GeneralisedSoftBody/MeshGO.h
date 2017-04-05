@@ -1,3 +1,7 @@
+//=================================================================
+// Base class for all model based game objects
+//=================================================================
+
 #ifndef _CMOGO_H_
 #define _CMOGO_H_
 #include "gameobject.h"

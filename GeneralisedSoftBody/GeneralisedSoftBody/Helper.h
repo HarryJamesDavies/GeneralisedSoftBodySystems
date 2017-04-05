@@ -1,10 +1,11 @@
+//=================================================================
+//Helper function to convert to odd char type used by Microsoft stuff
+//=================================================================
+
 #ifndef _HELPER_H_
 #define _HELPER_H_
 #include <string>
 
-//=================================================================
-//helper function to convert to odd char type used by Microsoft stuff
-//=================================================================
 struct Helper
 {
 	static wchar_t* charToWChar(const char* _text)

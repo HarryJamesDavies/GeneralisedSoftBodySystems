@@ -1,3 +1,7 @@
+//=================================================================
+// Mass/spring primitive typings
+//=================================================================
+
 #ifndef _MSO_TYPES_H_
 #define _MSO_TYPES_H_
 
@@ -9,5 +13,5 @@ enum MSOTypes
 	Count
 };
 
-#endif // !_MSO_TYPES_H_
+#endif
 

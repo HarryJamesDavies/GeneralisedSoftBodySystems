@@ -1,3 +1,7 @@
+//=================================================================
+// Combined mesh of masses and springs
+//=================================================================
+
 #ifndef _M_S_MESH_H_
 #define _M_S_MESH_H_
 #include <list>
@@ -55,8 +59,6 @@ public:
 	MSMass* GetExternalMass(int _index);
 	float GetPressure() { return m_pressure; };
 
-	void CalculateVolume();
-	void CalculatePressure(GlobalData* _GD);
 	void CalculateNormals(MSTriangle* _triangle);
 	float CalculateAngle(Vector3 _angleVertex, Vector3 _nextVertexA, Vector3 _prevVertex);
 
@@ -75,11 +77,13 @@ public:
 private:
 	VertexMSO* m_parent = nullptr;
 
+	//Vertices to assign to masses
 	list<int> m_verticesToAssign;
 
 	float m_volume;
 	float m_pressure;
 
+	//List of inner layer masses and springs
 	list<MSMass*> m_internalMasses;
 	list<MSSpring*> m_springs;
 

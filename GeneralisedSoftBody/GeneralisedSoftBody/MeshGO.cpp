@@ -1,3 +1,7 @@
+//=================================================================
+// Base class for all model based game objects
+//=================================================================
+
 #include "MeshGO.h"
 #include <windows.h>
 #include "Model.h"

@@ -1,3 +1,7 @@
+//=================================================================
+// Mass/spring cube primitive
+//=================================================================
+
 #include "MSOCube.h"
 #include "MSMesh.h"
 #include "GlobalData.h"
@@ -31,15 +35,20 @@ MSOCube::~MSOCube()
 {
 }
 
+//Generates all vertex and mass/spring structures
 void MSOCube::Initilaise(bool _generateInternals, ID3D11Device* _ID)
 {
-	m_mesh->Set3D(_generateInternals);
+	m_mesh->Set3D(true);
+
 	TriangulateVertices* math = new TriangulateVertices();
 
+	//Generates vertex mesh
 	CreateVertices();
 	CreateIntialVertices();
 	UpdateNormals();
 	math->CalculateTriangles(&m_triangles, m_vertices, m_indices, m_numPrims);
+
+	//Generates mass/spring structure
 	m_mesh->CreateSurfaceMasses(m_numVerts, m_triangles.size(), m_triangles.begin(), m_triangles.end());
 	m_mesh->CreateSurfaceSprings();
 	m_mesh->UpdateNormals();
@@ -51,6 +60,7 @@ void MSOCube::Initilaise(bool _generateInternals, ID3D11Device* _ID)
 
 	delete(math);
 
+	//Builds GPU Buffers
 	BuildDIB(_ID, m_indices);
 	BuildDVB(_ID, m_numVerts, m_vertices);
 
@@ -71,22 +81,23 @@ void MSOCube::Initilaise(bool _generateInternals, ID3D11Device* _ID)
 	HRESULT hr = _ID->CreateRasterizerState(&rasterDesc, &m_pRasterState);
 }
 
+//Generates a mesh of vertices align to make a cube
 void MSOCube::CreateVertices()
 {
-	//calculate number of vertices and primatives
+	//Calculate number of vertices and primatives
 	m_numVerts = static_cast<int>((2 * 6 * (m_numSections.x) * (m_numSections.y)) + (2 * 6 * (m_numSections.x) * (m_numSections.z)) + (2 * 6 * (m_numSections.y) * (m_numSections.z)));
 	m_numPrims = m_numVerts / 3;
 	m_vertices = new Vertex[m_numVerts];
 	m_indices = new WORD[m_numVerts];
 
-	//as using the standard VB shader set the tex-coords somewhere safe
+	//Using the standard VB shader set the tex-coords
 	for (int i = 0; i < m_numVerts; i++)
 	{
 		m_indices[i] = i;
 		m_vertices[i].texCoord = Vector2::One;
 	}
 
-	//in each loop create the two traingles for the matching sub-square on each of the six faces
+	//Generates cube two polygons per face each iteration
 	int vert = 0;
 
 	for (int y = 0; y < m_numSections.y; y++)
@@ -110,27 +121,6 @@ void MSOCube::CreateVertices()
 		}
 	}
 
-	for (int z = 0; z < m_numSections.z; z++)
-	{
-		for (int x = 0; x < m_numSections.x; x++)
-		{
-			//top
-			m_vertices[vert].Color = Color(1.0f, 0.0f, 0.0f, 1.0f);
-			m_vertices[vert++].Pos = Vector3(m_width * (float)(x + 1), m_height * m_numSections.y, -m_depth * (float)z);
-			m_vertices[vert].Color = Color(1.0f, 0.0f, 0.0f, 1.0f);
-			m_vertices[vert++].Pos = Vector3(m_width * (float)(x + 1), m_height * m_numSections.y, -m_depth * (float)(z + 1));
-			m_vertices[vert].Color = Color(1.0f, 0.0f, 0.0f, 1.0f);
-			m_vertices[vert++].Pos = Vector3(m_width * (float)x, m_height * m_numSections.y, -m_depth * (float)z);
-
-			m_vertices[vert].Color = Color(1.0f, 0.0f, 0.0f, 1.0f);
-			m_vertices[vert++].Pos = Vector3(m_width * (float)x, m_height * m_numSections.y, -m_depth * (float)z);
-			m_vertices[vert].Color = Color(1.0f, 0.0f, 0.0f, 1.0f);
-			m_vertices[vert++].Pos = Vector3(m_width * (float)(x + 1), m_height * m_numSections.y, -m_depth * (float)(z + 1));
-			m_vertices[vert].Color = Color(1.0f, 0.0f, 0.0f, 1.0f);
-			m_vertices[vert++].Pos = Vector3(m_width * (float)x, m_height * m_numSections.y, -m_depth * (float)(z + 1));
-		}
-	}
-
 	for (int y = 0; y < m_numSections.y; y++)
 	{
 		for (int x = 0; x < m_numSections.x; x++)
@@ -149,6 +139,27 @@ void MSOCube::CreateVertices()
 			m_vertices[vert++].Pos = Vector3(m_width * (float)(x + 1), m_height * (float)(y + 1), 0.0f);
 			m_vertices[vert].Color = Color(0.0f, 1.0f, 0.0f, 1.0f);
 			m_vertices[vert++].Pos = Vector3(m_width * (float)x, m_height * (float)(y + 1), 0.0f);
+		}
+	}
+
+	for (int z = 0; z < m_numSections.z; z++)
+	{
+		for (int x = 0; x < m_numSections.x; x++)
+		{
+			//top
+			m_vertices[vert].Color = Color(1.0f, 0.0f, 0.0f, 1.0f);
+			m_vertices[vert++].Pos = Vector3(m_width * (float)(x + 1), m_height * m_numSections.y, -m_depth * (float)z);
+			m_vertices[vert].Color = Color(1.0f, 0.0f, 0.0f, 1.0f);
+			m_vertices[vert++].Pos = Vector3(m_width * (float)(x + 1), m_height * m_numSections.y, -m_depth * (float)(z + 1));
+			m_vertices[vert].Color = Color(1.0f, 0.0f, 0.0f, 1.0f);
+			m_vertices[vert++].Pos = Vector3(m_width * (float)x, m_height * m_numSections.y, -m_depth * (float)z);
+
+			m_vertices[vert].Color = Color(1.0f, 0.0f, 0.0f, 1.0f);
+			m_vertices[vert++].Pos = Vector3(m_width * (float)x, m_height * m_numSections.y, -m_depth * (float)z);
+			m_vertices[vert].Color = Color(1.0f, 0.0f, 0.0f, 1.0f);
+			m_vertices[vert++].Pos = Vector3(m_width * (float)(x + 1), m_height * m_numSections.y, -m_depth * (float)(z + 1));
+			m_vertices[vert].Color = Color(1.0f, 0.0f, 0.0f, 1.0f);
+			m_vertices[vert++].Pos = Vector3(m_width * (float)x, m_height * m_numSections.y, -m_depth * (float)(z + 1));
 		}
 	}
 
@@ -214,8 +225,6 @@ void MSOCube::CreateVertices()
 			m_vertices[vert++].Pos = Vector3(m_width * m_numSections.x, m_height * (float)(y + 1), -m_depth * (float)z);
 		}
 	}
-
-	m_mesh->Set3D(true);
 
 	return;
 }

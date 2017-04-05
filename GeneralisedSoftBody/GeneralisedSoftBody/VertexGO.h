@@ -1,3 +1,7 @@
+//=================================================================
+//Base Game Object drawn using a Vertex and Index Buffer
+//=================================================================
+
 #ifndef _VERTEX_GO_H_
 #define _VERTEX_GO_H_
 #include "GameObject.h"
@@ -9,11 +13,6 @@ using namespace DirectX;
 
 struct GlobalData;
 
-//=================================================================
-//the base Game Object drawn using a Vertex and Index Buffer
-//all of the main aspects of drawing it have a default which is pointed to by a static pointer
-//this is only used if the version for this object is not set to nullptr
-//=================================================================
 class VertexGO :public GameObject
 {
 public:
@@ -23,14 +22,13 @@ public:
 	virtual void Tick(GlobalData* _GD);
 	virtual void Draw(DrawData3D* _DD);
 
-	//set up and then destroy all static default render stuff for VBGOs
+	//Set up and then destroy all static default render stuff for VBGOs
 	static void Init(ID3D11Device* _GD);//Graphics Device NOT GameData
 	static void CleanUp();
 
 	//Update static const buffer required for deafult rendering
 	static void UpdateConstantBuffer(DrawData3D* _DD);
 
-	//int GetMaxVert() { return m_maxVert; };
 	Vertex* GetVertex(int i) { return &m_vertices[i]; }
 	Vector3 GetVertexPos(int i) { return m_vertices[i].Pos; };
 	void SetVertexPos(int i, Vector3 _pos) { m_vertices[i].Pos = _pos; };
@@ -39,10 +37,7 @@ public:
 	int GetIndexCount() { return m_numPrims * 3; };
 	int GetIndex(int i) { return m_indices[i]; };
 
-	//int GetFace(int i) { return m_vertices[i].face; };
 	Vector3 GetVertexNorm(int i) { return  m_vertices[i].Norm; };
-	float GetForce() { return m_force; };
-	Vector3 GetVelocity() { return m_velocity; };
 
 protected:
 
@@ -51,7 +46,7 @@ protected:
 	ID3D11Buffer* m_IndexBuffer;
 	UINT m_numPrims;
 
-	//vertex topology in VB
+	//Vertex topology in VB
 	D3D_PRIMITIVE_TOPOLOGY m_topology;
 
 	//default vertexshader
@@ -102,11 +97,6 @@ protected:
 	Vertex* m_vertices;
 	int m_maxVert;
 	int m_numVerts;
-
-	float m_force;
-	Vector3 m_overallForce;
-	Vector3 m_velocity;
-	Vector3 m_oldVelocity;
 };
 
 #endif

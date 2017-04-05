@@ -1,3 +1,7 @@
+//=================================================================
+// Collection of all physic coeffiects and parameters
+//=================================================================
+
 #ifndef _PHYSICS_DATA_H_
 #define _PHYSICS_DATA_H_
 #include "d3d11_1.h"

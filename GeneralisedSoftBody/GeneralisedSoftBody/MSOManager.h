@@ -1,3 +1,7 @@
+//=================================================================
+// Mass/spring object manager
+//=================================================================
+
 #ifndef _MSO_MANAGER_H_
 #define _MSO_MANAGER_H_
 #include <string>
@@ -25,6 +29,7 @@ public:
 
 	bool m_internal = true;
 
+	//GUI MSO Values
 	int m_width = 10;
 	int m_height = 10;
 	int m_depth = 10;
@@ -43,8 +48,10 @@ public:
 private:
 	void DeleteMSO(GlobalData* _GD);
 
+	//Holds the previous MSO primitive type
 	MSOTypes m_prevType;
 
+	//Holds the name of current MSO for saving and deleing functions
 	string m_currentMSOName;
 };
 

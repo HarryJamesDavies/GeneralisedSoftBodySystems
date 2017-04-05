@@ -1,3 +1,7 @@
+//=================================================================
+//Used to determine which layer an object belongs to
+//=================================================================
+
 #pragma once
 
 enum ObjectLayer

@@ -1,3 +1,7 @@
+//=================================================================
+// Managers the user interface and interactions
+//=================================================================
+
 #ifndef _GUI_MANAGER_H_
 #define _GUI_MANAGER_H_
 #include <windows.h>
@@ -30,24 +34,26 @@ private:
 	void CreateSquareBar();
 	void CreateCubeBar();
 
+	//Tool bars
 	TwBar *msoManagerBar;
 	TwBar *msoBar;
 	TwBar *physicsBar;
 
 	GlobalData* m_GD;
 
-	bool m_pauseOnSpawn;
+	//GUI flags
+	bool m_pauseOnSpawn = false;
 
-	bool m_createFile;
-	bool m_spawnFile;
+	bool m_createFile = false;
+	bool m_spawnFile = false;
 
-	bool m_createFBX;
-	bool m_spawnFBX;
+	bool m_createFBX = false;
+	bool m_spawnFBX = false;
 
-	bool m_createPrimitive;
-	bool m_spawnPrimitive;
+	bool m_createPrimitive = false;
+	bool m_spawnPrimitive = false;
 
-	bool m_savePrimitive;
+	bool m_saveMSO = false;
 
 	char* m_fileName;
 };

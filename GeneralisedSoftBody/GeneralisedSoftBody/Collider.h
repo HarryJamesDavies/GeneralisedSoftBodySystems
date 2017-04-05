@@ -1,3 +1,7 @@
+//=================================================================
+// Base collider from which all other colliders inherit
+//=================================================================
+
 #ifndef _COLLIDER_H_
 #define _COLLIDER_H_
 #include "d3d11_1.h"

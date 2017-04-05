@@ -1,9 +1,9 @@
-#ifndef _DRAW_STATE_3D_H_
-#define _DRAW_STATE_3D_H_
-
 //=================================================================
 //Data to be passed by game to all Game Objects via Draw 
 //=================================================================
+
+#ifndef _DRAW_STATE_3D_H_
+#define _DRAW_STATE_3D_H_
 #include "CommonStates.h"
 
 using namespace DirectX;
@@ -17,7 +17,6 @@ struct DrawData3D
 	CommonStates* m_states;
 	Camera* m_cam;
 	Light* m_light;
-
 };
 
 #endif

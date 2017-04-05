@@ -1,3 +1,7 @@
+//=================================================================
+// Base file from which all other systems are created from
+//=================================================================
+
 #ifndef _BASE_H_
 #define _BASE_H_
 #include <windows.h>
@@ -18,9 +22,6 @@ public:
 	//Core base loops
 	bool Update();
 	void Render(ID3D11DeviceContext* _pd3dImmediateContext);
-
-protected:
-
 
 private:
 	void InitialiseRender(HWND _hWnd);

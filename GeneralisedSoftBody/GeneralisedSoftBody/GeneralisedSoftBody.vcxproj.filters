@@ -409,9 +409,6 @@
     <FxCompile Include="..\Assets\BasicPixelShader.hlsl">
       <Filter>Resource Files\Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="..\Assets\BasicShader.fx">
-      <Filter>Resource Files\Shaders</Filter>
-    </FxCompile>
     <FxCompile Include="..\Assets\BasicVertexShader.hlsl">
       <Filter>Resource Files\Shaders</Filter>
     </FxCompile>

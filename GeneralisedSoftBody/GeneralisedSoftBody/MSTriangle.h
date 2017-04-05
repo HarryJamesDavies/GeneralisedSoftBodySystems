@@ -1,3 +1,7 @@
+//=================================================================
+// Contains set of three masses used to construct mass triangle
+//=================================================================
+
 #ifndef _MS_TRIANGLE_H_
 #define _MS_TRIANGLE_H_
 
@@ -11,6 +15,7 @@ public:
 
 	int m_index;
 
+	//Mass indices
 	int m_massA;
 	int m_massB;
 	int m_massC;

@@ -1,3 +1,7 @@
+//==============================================================
+//Used in basic spring tests as masses
+//==============================================================
+
 #include "NetAnchor.h"
 #include "GlobalData.h"
 
@@ -18,6 +22,7 @@ NetAnchor::~NetAnchor()
 	
 }
 
+//Update anchors position relative to applied forces
 void NetAnchor::Tick(GlobalData* _GD)
 {
 	if (!m_fixed)
@@ -79,6 +84,7 @@ void NetAnchor::Tick(GlobalData* _GD)
 	MeshGO::Tick(_GD);
 }
 
+//Attaches spring to anchor
 void NetAnchor::AddSpring(NetAnchor* _anchorB)
 {
 	m_springs.push_back(new NetSpring(this, _anchorB));

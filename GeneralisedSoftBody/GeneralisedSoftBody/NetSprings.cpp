@@ -1,3 +1,7 @@
+//==============================================================
+//Used in basic spring tests to calculate spring force
+//==============================================================
+
 #include "NetSprings.h"
 #include "GlobalData.h"
 #include "NetAnchor.h"
@@ -19,6 +23,7 @@ NetSpring::~NetSpring()
 
 }
 
+//Calculates spring force using Hooke's law
 Vector3 NetSpring::CalculateForce(GlobalData* _GD)
 {
 	//Calculates spring force using hooke's law

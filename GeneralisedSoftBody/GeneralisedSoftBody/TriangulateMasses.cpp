@@ -1,3 +1,7 @@
+//=================================================================
+// Generate mass/spring structure based on polygons
+//=================================================================
+
 #include "TriangulateMasses.h"
 #include "Triangle.h"
 #include "Edge.h"
@@ -625,6 +629,7 @@ float TriangulateMasses::FindFixPoint(FixDimension _dimension, int _index)
 	float fixPoint = 0.0f;
 	int index = 0;
 
+	//Gets the value of the fix point on the mesh relative to fix dimension
 	for (auto listIter = m_list.begin(); listIter != m_list.end(); listIter++)
 	{
 		if (index == _index)
@@ -664,6 +669,7 @@ bool TriangulateMasses::CheckFixed(FixDimension _dimension, FixFormat _format, V
 {
 	float checkPoint = 0.0f;
 
+	//Gets the point to check against relative to fix dimension
 	switch (_dimension)
 	{
 	case FixDimension::X:
@@ -688,6 +694,7 @@ bool TriangulateMasses::CheckFixed(FixDimension _dimension, FixFormat _format, V
 	}
 	}
 
+	//Checks values based on fixing format
 	switch (_format)
 	{
 	case FixFormat::Level:

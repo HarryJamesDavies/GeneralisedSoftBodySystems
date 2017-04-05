@@ -1,3 +1,7 @@
+//=================================================================
+// Mass/spring chain primitive
+//=================================================================
+
 #include "MSOChain.h"
 #include "MSMesh.h"
 #include "GlobalData.h"
@@ -28,27 +32,27 @@ MSOChain::~MSOChain()
 {
 }
 
+//Generates all vertex and mass/spring structures
 void MSOChain::Initilaise(bool _generateInternals, ID3D11Device* _ID)
 {
 	SetScale(1.0f);
 
-	m_mesh->Set3D(_generateInternals);
+	m_mesh->Set3D(false);
 	TriangulateVertices* math = new TriangulateVertices();
 
+	//Generates vertex mesh
 	CreateVertices();
 	CreateIntialVertices();
 	UpdateNormals();
 	math->CalculateTriangles(&m_triangles, m_vertices, m_indices, m_numPrims);
+
+	//Generates mass/spring structure
 	m_mesh->CreateMasses1D(m_numVerts, m_width, m_height, m_numSections);
 	m_mesh->CreateSprings1D(m_numSections);
-	if (_generateInternals)
-	{
-		m_mesh->CreateInternalMasses();
-		m_mesh->CreateInternalSprings();
-	}
 
 	delete(math);
 
+	//Builds GPU Buffers
 	BuildDIB(_ID, m_indices);
 	BuildDVB(_ID, m_numVerts, m_vertices);
 
@@ -69,22 +73,23 @@ void MSOChain::Initilaise(bool _generateInternals, ID3D11Device* _ID)
 	HRESULT hr = _ID->CreateRasterizerState(&rasterDesc, &m_pRasterState);
 }
 
+//Creates a strip of sections each defined by six vertices
 void MSOChain::CreateVertices()
 {
-	//calculate number of vertices and primatives
+	//Calculate number of vertices and primatives
 	m_numVerts = 6 * m_numSections;
 	m_numPrims = m_numVerts / 3;
 	m_vertices = new Vertex[m_numVerts];
 	m_indices = new WORD[m_numVerts];
 
-	//as using the standard VB shader set the tex-coords somewhere safe
+	//Using the standard VB shader set the tex-coords
 	for (int i = 0; i < m_numVerts; i++)
 	{
 		m_indices[i] = i;
 		m_vertices[i].texCoord = Vector2::One;
 	}
 
-	//in each loop create the two traingles for the matching sub-square on each of the six faces
+	//Generates vertices in sections of six
 	int vert = 0;
 	float o = 0.0f;
 	float p = 1.0f;

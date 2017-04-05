@@ -1,3 +1,7 @@
+//=================================================================
+// Spring used to calculate the resistance force when compressed or stretched between masses
+//=================================================================
+
 #include "MSSpring.h"
 #include "MSMass.h"
 
@@ -26,6 +30,7 @@ void MSSpring::CalculateForce(GlobalData* _GD)
 	m_massDistance = Vector3::Distance(m_massB->GetPos(), m_massA->GetPos()); // dl
 	float force = _GD->m_physicsManager->m_physicsData.m_springCoefficient * (m_massDistance - m_equilibriumDistance); // f = k * (dl - il)
 
+	//Calculate damping force combined with Hooke's law
 	Vector3 massVector = m_massB->GetPos() - m_massA->GetPos(); // r
 	massVector.Normalize();
 
@@ -33,23 +38,19 @@ void MSSpring::CalculateForce(GlobalData* _GD)
 
 	Vector3 forceVector = (massVector * force) + (_GD->m_physicsManager->m_physicsData.m_dampingCoefficient * (velocityVector * massVector)) * massVector; // F = (r * f) + (d *(vr * r)) * r
 
+	//Adds force to both masses
 	m_massA->AddSpringForce(forceVector);
 	m_massB->AddSpringForce(-forceVector);
 }
 
-void MSSpring::CalculateNormal()
-{
-	m_normal = Vector3::Zero;
-	m_normal.x = -(m_massA->GetPos().x - m_massB->GetPos().x) / m_massDistance;
-	m_normal.y = (m_massA->GetPos().y - m_massB->GetPos().y) / m_massDistance;
-}
-
+//Sets the pressure value of the masses connected to spring
 void MSSpring::SetMassPressure(float _pressure)
 {
 	m_massA->AddPressureForce(_pressure);
 	m_massB->AddPressureForce(_pressure);
 }
 
+//Checks whether spring is attached to _mass
 bool MSSpring::ContainsMass(MSMass* _mass)
 {
 	if (m_massA == _mass || m_massB == _mass)

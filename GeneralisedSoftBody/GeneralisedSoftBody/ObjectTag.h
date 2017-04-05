@@ -1,3 +1,7 @@
+//=================================================================
+//Used to tag specific types of objects such as players
+//=================================================================
+
 #pragma once
 
 enum ObjectTag

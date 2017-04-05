@@ -1,15 +1,14 @@
+//=================================================================
+// All Application and DirectX base level stuff goes here
+//=================================================================
+
 #ifndef _APP_H_
 #define _APP_H_
 #include <windows.h>
 #include <d3d11_1.h>
-//#include <d3dcompiler.h>
 #include <directxcolors.h>
 #include "Resource.h"
 #include "Base.h"
-
-//=================================================================
-// All Application and DirectX base level stuff goes here
-//=================================================================
 
 using namespace DirectX;
 

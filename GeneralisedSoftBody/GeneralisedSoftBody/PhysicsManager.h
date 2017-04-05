@@ -1,3 +1,7 @@
+//=================================================================
+// Manages all global interactions and updates physics systems
+//=================================================================
+
 #ifndef _PHYSIC_MANAGER_H_
 #define _PHYSIC_MANAGER_H_
 #include <list>

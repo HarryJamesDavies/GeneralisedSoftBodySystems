@@ -1,3 +1,7 @@
+//=================================================================
+// Container for two vertices and identifiers of the neighbouring triangles
+//=================================================================
+
 #include "Edge.h"
 #include "Triangle.h"
 #include "Vertex.h"

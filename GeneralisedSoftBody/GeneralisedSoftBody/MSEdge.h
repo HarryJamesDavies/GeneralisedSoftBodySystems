@@ -1,3 +1,7 @@
+//=================================================================
+// Contains a pair of masses used to construct mass triangle
+//=================================================================
+
 #ifndef _MS_EDGE_H_
 #define _MS_EDGE_H_
 

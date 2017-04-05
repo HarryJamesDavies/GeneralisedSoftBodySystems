@@ -7,6 +7,9 @@ VertexBox::VertexBox(int _size, ID3D11Device* _ID, GlobalData* _GD) : VertexGO()
 	m_name = "Cube";
 	m_tag = ObjectTag::OT_NULL;
 	m_layer = ObjectLayer::OL_NULL;
+
+	SetScale(6.0f);
+
 	init(_size, _ID, _GD);
 }
 
@@ -18,23 +21,21 @@ void VertexBox::init(int _size, ID3D11Device* _ID, GlobalData* _GD)
 {
 	m_size = _size;
 
-	SetScale(6.0f);
-
-	//calculate number of vertices and primatives
+	//Calculate number of vertices and primatives
 	m_numVerts = 6 * 6 * (m_size - 1) * (m_size - 1);
 	m_maxVert = m_numVerts;
 	m_numPrims = m_numVerts / 3;
 	m_vertices = new Vertex[m_numVerts];
 	m_indices = new WORD[m_numVerts];
 
-	//as using the standard VB shader set the tex-coords somewhere safe
+	//Using the standard VB shader set the tex-coords
 	for (int i = 0; i < m_numVerts; i++)
 	{
 		m_indices[i] = i;
 		m_vertices[i].texCoord = Vector2::One;
 	}
 
-	//in each loop create the two traingles for the matching sub-square on each of the six faces
+	//Each loop create the two traingles for the matching sub-square on each of the six faces
 	int vert = 0;
 	for (int i = -(m_size - 1) / 2; i<(m_size - 1) / 2; i++)
 	{
@@ -169,17 +170,14 @@ void VertexBox::init(int _size, ID3D11Device* _ID, GlobalData* _GD)
 		}
 	}
 
-	//carry out some kind of transform on these vertices to make this object more interesting
-	Transform();
-
-	//calculate the normals for the basic lighting in the base shader
+	//Calculate the normals for the basic lighting in the base shader
 	for (UINT i = 0; i < m_numPrims; i++)
 	{
 		WORD V1 = 3 * i;
 		WORD V2 = 3 * i + 1;
 		WORD V3 = 3 * i + 2;
 
-		//build normals
+		//Build normals
 		Vector3 norm;
 		Vector3 vec1 = m_vertices[V1].Pos - m_vertices[V2].Pos;
 		Vector3 vec2 = m_vertices[V3].Pos - m_vertices[V2].Pos;
@@ -191,11 +189,12 @@ void VertexBox::init(int _size, ID3D11Device* _ID, GlobalData* _GD)
 		m_vertices[V3].Norm = norm;
 	}
 
-
+	//Builds GPU Buffers
 	BuildIB(_ID, m_indices);
 	BuildVB(_ID, m_numVerts, m_vertices);
 
-	//delete[] m_vertices; //this is no longer needed as this is now in the Vertex Buffer
+	delete[] m_vertices;
+
 	D3D11_RASTERIZER_DESC rasterDesc;
 	rasterDesc.AntialiasedLineEnable = false;
 	rasterDesc.CullMode = D3D11_CULL_NONE;

@@ -1,3 +1,7 @@
+//=================================================================
+// Mass/spring square primitive
+//=================================================================
+
 #include "MSOSquare.h"
 #include "MSMesh.h"
 #include "GlobalData.h"
@@ -28,16 +32,20 @@ MSOSquare::~MSOSquare()
 {
 }
 
+//Generates all vertex and mass/spring structures
 void MSOSquare::Initilaise(bool _generateInternals, ID3D11Device* _ID)
 {
-	SetScale(1.0f);
 	m_mesh->Set3D(false);
+
 	TriangulateVertices* math = new TriangulateVertices();
 
+	//Generates vertex mesh
 	CreateVertices();
 	CreateIntialVertices();
 	UpdateNormals();
 	math->CalculateTriangles(&m_triangles, m_vertices, m_indices, m_numPrims);
+
+	//Generates mass/spring structure
 	m_mesh->CreateSurfaceMasses(m_numVerts, m_triangles.size(), m_triangles.begin(), m_triangles.end());
 	m_mesh->CreateSurfaceSprings();
 	if (_generateInternals)
@@ -48,6 +56,7 @@ void MSOSquare::Initilaise(bool _generateInternals, ID3D11Device* _ID)
 
 	delete(math);
 
+	//Builds GPU Buffers
 	BuildDIB(_ID, m_indices);
 	BuildDVB(_ID, m_numVerts, m_vertices);
 
@@ -68,21 +77,23 @@ void MSOSquare::Initilaise(bool _generateInternals, ID3D11Device* _ID)
 	HRESULT hr = _ID->CreateRasterizerState(&rasterDesc, &m_pRasterState);
 }
 
+//Generates a mesh of vertices to assemble a Square
 void MSOSquare::CreateVertices()
 {
-	//calculate number of vertices and primatives
+	//Calculate number of vertices and primatives
 	m_numVerts = static_cast<int>(6 * (m_numSections.x) * (m_numSections.y));
 	m_numPrims = m_numVerts / 3;
 	m_vertices = new Vertex[m_numVerts];
 	m_indices = new WORD[m_numVerts];
 
-	//as using the standard VB shader set the tex-coords somewhere safe
+	//Using the standard VB shader set the tex-coords
 	for (int i = 0; i < m_numVerts; i++)
 	{
 		m_indices[i] = i;
 		m_vertices[i].texCoord = Vector2::One;
 	}
 
+	//Generates columns then rows of square two polygons at a time
 	int vert = 0;
 	float o = 0.0f;
 	float p = 1.0f;

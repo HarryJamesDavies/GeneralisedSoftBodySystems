@@ -1,4 +1,7 @@
-//base camera class
+//=================================================================
+//Base Camera Class
+//=================================================================
+
 #include "Camera.h"
 
 Camera::Camera(float _fieldOfView, float _aspectRatio, float _nearPlaneDistance, float _farPlaneDistance, Vector3 _up, Vector3 _target)

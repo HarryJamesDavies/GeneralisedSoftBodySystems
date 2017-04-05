@@ -1,3 +1,7 @@
+//=================================================================
+// Base file from which all other systems are created from
+//=================================================================
+
 #include "Base.h"
 #include "DrawData2D.h"
 #include "DrawData3D.h"
@@ -6,12 +10,10 @@
 #include "FollowCamera.h"
 #include "Light.h"
 #include "VertexGO.h"
-#include <AntTweakBar.h>
-
 #include "VertexMSO.h"
 #include "Player.h"
-
 #include "GUIManager.h"
+#include <AntTweakBar.h>
 
 Base::Base(ID3D11Device* _pd3dDevice, HWND _hWnd, HINSTANCE _hInstance)
 {
@@ -22,6 +24,7 @@ Base::Base(ID3D11Device* _pd3dDevice, HWND _hWnd, HINSTANCE _hInstance)
 
 	InitialisePhysics();
 
+	//Initialise Mass/Spring Systems.
 	m_globalData->m_MSOManager = std::make_unique<MSOManager>(m_globalData);
 	m_globalData->m_MSOManager->m_currentType = MSOTypes::CUBE;
 	m_globalData->m_MSOManager->CreateMSOPrimitive(m_globalData);
@@ -29,14 +32,16 @@ Base::Base(ID3D11Device* _pd3dDevice, HWND _hWnd, HINSTANCE _hInstance)
 	InitialiseRender(_hWnd);
 	InitialiseUI();
 
+	//Setups up Input devices in Global Data
 	m_globalData->m_keyboard = std::make_unique<Keyboard>();
 	m_globalData->m_mouse = std::make_unique<Mouse>();
 	m_globalData->m_mouse->SetWindow(_hWnd);
 }
 
+//Initialise Visual systems: DrawData, Camera, aspect Ratio.
 void Base::InitialiseRender(HWND _hWnd)
 {
-	//Create DirectXTK spritebatch stuff
+	//Create DirectXTK spritebatch and DrawData2D
 	ID3D11DeviceContext* pd3dImmediateContext;
 	m_globalData->m_IDevice->GetImmediateContext(&pd3dImmediateContext);
 	m_globalData->m_IDeviceContext = pd3dImmediateContext;
@@ -64,8 +69,8 @@ void Base::InitialiseRender(HWND _hWnd)
 	((EffectFactory*)m_globalData->m_fxFactory)->SetDirectory(L"../Release");
 #endif
 
+	//Initilse player controled visuals: player, camera and lighting.
 	InitialisePlayer();
-
 	FollowCamera* m_currentCamera = new FollowCamera(m_globalData->m_gameObjectPool->GetGameObject("Player", ObjectLayer::OL_NULL),
 		Vector3(150.0f, 150.0f, 150.0f), 0.25f * XM_PI, AR, 1.0f, 10000.0f, Vector3::UnitY);
 	m_currentCamera->SetName("MainCamera");
@@ -85,6 +90,7 @@ void Base::InitialiseRender(HWND _hWnd)
 	return;
 }
 
+//Initialise Graphical User Interface
 void Base::InitialiseUI()
 {
 	m_globalData->m_GUIManager = std::make_unique<GUIManager>();
@@ -92,6 +98,7 @@ void Base::InitialiseUI()
 	return;
 }
 
+//Initalise Physics parameters.
 void Base::InitialisePhysics()
 {
 	m_globalData->m_physicsManager = std::make_unique<PhysicsManager>();
@@ -110,6 +117,7 @@ void Base::InitialisePhysics()
 	return;
 }
 
+//Initialise Playr related functionality
 void Base::InitialisePlayer()
 {
 	Player* player = new Player(50.0f, 2.0f, "BirdModelV1.cmo", m_globalData);
@@ -129,14 +137,19 @@ Base::~Base()
 	VertexGO::CleanUp();
 }
 
+//Base system tick
 bool Base::Update()
 {
+	//Handles Keyboard Input functionality
 	auto kb = m_globalData->m_keyboard->GetState();
+
+	//Exits program if Esc is pressed
 	if (kb.Escape)
 		PostQuitMessage(0);
 
 	auto mouse = m_globalData->m_mouse->GetState();
 
+	//Won't tick logic when system paused
 	if (!m_globalData->m_pause)
 	{
 		//calculate frame time-step dt for passing down to game objects
@@ -144,23 +157,30 @@ bool Base::Update()
 		m_globalData->m_dt = min((float)(currentTime - m_globalData->m_playTime) / 1000.0f, 0.1f);
 		m_globalData->m_playTime = currentTime;
 
+		//Updates all physics systems relative to delta time.
 		m_globalData->m_physicsManager->UpdatePhysics(m_globalData->m_dt);
+
+		//Update GUI tool bars on flag changes.
 		m_globalData->m_GUIManager->Update();
 
+		//Ticks all game objects stored in game pool.
 		m_globalData->m_gameObjectPool->Tick(m_globalData);
 	}
 
 	return true;
 }
 
+//Base system render
 void Base::Render(ID3D11DeviceContext* _pd3dImmediateContext)
 {
 	m_globalData->m_DD3D->m_pd3dImmediateContext = _pd3dImmediateContext;
 
 	VertexGO::UpdateConstantBuffer(m_globalData->m_DD3D);
 
+	//Draws all objects in the game pool.
 	m_globalData->m_gameObjectPool->Draw(m_globalData->m_DD3D);
 
+	//Draws GUI to screen.
 	TwDraw();
 
 	return;

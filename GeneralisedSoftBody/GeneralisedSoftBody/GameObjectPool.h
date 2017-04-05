@@ -1,9 +1,8 @@
+//=================================================================
+// Stores, draws, ticks and deletes all objects
+//=================================================================
+
 #pragma once
-
-//=================================================================
-// Store all 3D objects in the relevant layer list inside the map
-//=================================================================
-
 #include <list>
 #include <map>
 #include "ObjectLayer.h"
@@ -42,5 +41,6 @@ public:
 	void Delete();
 
 private:
-	std::map<ObjectLayer, std::list<GameObject*>*> m_GameObjects;//2D Objects
+	//All game objects
+	std::map<ObjectLayer, std::list<GameObject*>*> m_GameObjects;
 };

@@ -1,3 +1,7 @@
+//=================================================================
+// Base class for mass/spring chains
+//=================================================================
+
 #ifndef _MSO_CHAIN_H_
 #define _MSO_CHAIN_H_
 #include "VertexMSO.h"
@@ -18,6 +22,7 @@ public:
 private:
 	void CreateVertices();
 
+	//Dimensions of individual sections
 	int m_width;
 	int m_height;
 

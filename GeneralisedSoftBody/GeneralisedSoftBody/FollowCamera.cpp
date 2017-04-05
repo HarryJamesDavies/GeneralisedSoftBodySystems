@@ -1,3 +1,7 @@
+//=================================================================
+// A camera that will follow a specific obejct at a distance away
+//=================================================================
+
 #include "FollowCamera.h"
 #include "GlobalData.h"
 
@@ -22,5 +26,6 @@ void FollowCamera::Tick(GlobalData* _GD)
 	m_target = m_targetObject->GetPos();
 
 	Camera::Tick(_GD);
+
 	return;
 }

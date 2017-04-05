@@ -1,11 +1,11 @@
+//=================================================================
+// Stores, draws, ticks and deletes all objects
+//=================================================================
+
 #include "GameObjectPool.h"
 #include "GameObject.h"
 #include "GlobalData.h"
 #include "ObjectLayer.h"
-
-//========================================================================================================
-//Improved system which allows groups of objects to be selected
-//========================================================================================================
 
 GameObjectPool::GameObjectPool()
 {
@@ -29,9 +29,9 @@ GameObjectPool::~GameObjectPool()
 	m_GameObjects.clear();
 }
 
+//Gets a specific object by passing in the object's name
 GameObject* GameObjectPool::GetGameObject(std::string _objectName, ObjectLayer _layer)
 {
-	//Gets a specific object by passing in the object's name(GameObject2D)
 	for (auto it = GetObjectListBegin(_layer); it != GetObjectListEnd(_layer); it++)
 	{
 		if ((*it)->GetName() == _objectName)
@@ -42,17 +42,17 @@ GameObject* GameObjectPool::GetGameObject(std::string _objectName, ObjectLayer _
 	return nullptr;
 }
 
+//Stores an object on the relative layer, specify in the objects constructor
 void GameObjectPool::StoreGameObject(GameObject * _gameObject)
 {
-	//Stores an object on the relative layer, specify in the objects constructor
 	ObjectLayer layer = _gameObject->GetLayer();
 	m_GameObjects.find(layer)->second->push_back(_gameObject);
 	return;
 }
 
+//Ticks specific object by name
 void GameObjectPool::TickObject(GlobalData* _GD, std::string _objectName)
 {
-	//Draws all 2D game objects
 	for (auto it = m_GameObjects.begin(); it != m_GameObjects.end(); it++)
 	{
 		for (auto listIt = it->second->begin(); listIt != it->second->end(); listIt++)
@@ -65,18 +65,18 @@ void GameObjectPool::TickObject(GlobalData* _GD, std::string _objectName)
 	}
 }
 
+//Ticks specific layer of objects
 void GameObjectPool::TickLayer(GlobalData* _GD, ObjectLayer _layer)
 {
-	//Draws all 2D game objects on a set layer
 	for (auto it = GetObjectListBegin(_layer); it != GetObjectListEnd(_layer); it++)
 	{
 		(*it)->Tick(_GD);
 	}
 }
 
+//Ticks all game objects
 void GameObjectPool::Tick(GlobalData* _GD)
 {
-	//Ticks all 2D game objects
 	for (auto it = m_GameObjects.begin(); it != m_GameObjects.end(); it++)
 	{
 		for (auto listIt = it->second->begin(); listIt != it->second->end(); listIt++)
@@ -86,9 +86,9 @@ void GameObjectPool::Tick(GlobalData* _GD)
 	}
 }
 
+//Draws a specific object by name
 void GameObjectPool::DrawObject(DrawData3D* _DD, std::string _objectName)
 {
-	//Draws all 2D game objects
 	for (auto it = m_GameObjects.begin(); it != m_GameObjects.end(); it++)
 	{
 		for (auto listIt = it->second->begin(); listIt != it->second->end(); listIt++)
@@ -101,18 +101,18 @@ void GameObjectPool::DrawObject(DrawData3D* _DD, std::string _objectName)
 	}
 }
 
+//Draws all objects in a specifc layer
 void GameObjectPool::DrawLayer(DrawData3D* _DD, ObjectLayer _layer)
 {
-	//Draws all 2D game objects on a set layer
 	for (auto it = GetObjectListBegin(_layer); it != GetObjectListEnd(_layer); it++)
 	{
 		(*it)->Draw(_DD);
 	}
 }
 
+//Draws all game objects
 void GameObjectPool::Draw(DrawData3D* _DD)
 {
-	//Draws all 2D game objects
 	for (auto it = m_GameObjects.begin(); it != m_GameObjects.end(); it++)
 	{
 		for (auto listIt = it->second->begin(); listIt != it->second->end(); listIt++)
@@ -122,9 +122,9 @@ void GameObjectPool::Draw(DrawData3D* _DD)
 	}
 }
 
+//Sets a specific object to drawable
 void GameObjectPool::SetDrawable(bool _drawable, std::string _objectName, ObjectLayer _layer)
 {
-	//Draws all 2D game objects on a set layer
 	for (auto it = GetObjectListBegin(_layer); it != GetObjectListEnd(_layer); it++)
 	{
 		if ((*it)->GetName() == _objectName)
@@ -134,12 +134,13 @@ void GameObjectPool::SetDrawable(bool _drawable, std::string _objectName, Object
 	}
 }
 
+//Deletes specific object from object pool
 void GameObjectPool::DeleteObject(std::string _objectName)
 {
 	GameObject* objectToRemove = nullptr;
 	ObjectLayer layer = ObjectLayer::OL_NULL;
 
-	//Draws all 2D game objects
+	//Gets a specific object to be deleted
 	for (auto it = m_GameObjects.begin(); it != m_GameObjects.end(); it++)
 	{
 		for (auto listIt = it->second->begin(); listIt != it->second->end(); listIt++)
@@ -152,6 +153,7 @@ void GameObjectPool::DeleteObject(std::string _objectName)
 		}
 	}
 
+	//Deletes specific object
 	if (objectToRemove != nullptr)
 	{
 		m_GameObjects.find(layer)->second->remove(objectToRemove);
@@ -159,9 +161,9 @@ void GameObjectPool::DeleteObject(std::string _objectName)
 	objectToRemove = nullptr;
 }
 
+//Deletes a layer of objects
 void GameObjectPool::DeleteLayer(ObjectLayer _layer)
 {
-	//Draws all 2D game objects on a set layer
 	for (auto it = GetObjectListBegin(_layer); it != GetObjectListEnd(_layer); it++)
 	{
 		delete (*it);
@@ -171,9 +173,9 @@ void GameObjectPool::DeleteLayer(ObjectLayer _layer)
 	return;
 }
 
+//Deletes all objects
 void GameObjectPool::Delete()
 {
-	//Draws all 2D game objects
 	for (auto it = m_GameObjects.begin(); it != m_GameObjects.end(); it++)
 	{
 		for (auto listIt = it->second->begin(); listIt != it->second->end(); listIt++)

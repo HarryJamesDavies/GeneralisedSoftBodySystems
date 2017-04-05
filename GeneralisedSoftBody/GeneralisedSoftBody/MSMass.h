@@ -1,3 +1,7 @@
+//=================================================================
+// Mass point used to bind vertices and adust thier position based on applied forces
+//=================================================================
+
 #ifndef _M_S_MASS_H_
 #define _M_S_MASS_H_
 #include "d3d11_1.h"
@@ -66,9 +70,13 @@ public:
 	MSMass* GetOpposingMass() { return m_opposingMass; };
 
 private:
+	//Vertices directly adjusted by this mass
 	list<int> m_boundVertices;
 
+	//The mass on the opposing layer directly connected to this one
 	MSMass* m_opposingMass = nullptr;
+
+	//Neighbours directly attached to this mass via structural springs
 	list<MSMass*> m_structuralNeighbours;
 
 	int m_index;
@@ -87,6 +95,7 @@ private:
 
 	MSMesh* m_mesh;
 
+	//Flag determines whether the mass is fixed in place
 	bool m_fixed;
 	bool m_exteriorForces = true;
 };

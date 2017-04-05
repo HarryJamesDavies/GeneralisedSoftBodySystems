@@ -1,9 +1,9 @@
-#ifndef _DRAW_DATA_2D_H_
-#define _DRAW_DATA_2D_H_
-
 //=================================================================
 //Data to be passed by game to all 2D Game Objects via Draw 
 //=================================================================
+
+#ifndef _DRAW_DATA_2D_H_
+#define _DRAW_DATA_2D_H_
 #include "SpriteBatch.h"
 #include "SpriteFont.h"
 #include <memory>

@@ -1,3 +1,7 @@
+//=================================================================
+// Omni-directional collider that only apllies force
+//=================================================================
+
 #pragma once
 #include "Collider.h"
 

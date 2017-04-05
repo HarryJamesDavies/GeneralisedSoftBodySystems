@@ -1,3 +1,7 @@
+//=================================================================
+// Generate mass/spring structure based on polygons
+//=================================================================
+
 #ifndef _TRIANGULATE_MASSES_H_
 #define _TRIANGULATE_MASSES_H_
 #include <list>
@@ -17,6 +21,7 @@ class Edge;
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
 
+//Temporary structure to hold in progress data
 struct MassList
 {
 	int m_index;
@@ -64,7 +69,10 @@ private:
 
 	list<MassList*> m_list;
 
+	//Checklist for assigned vertices
 	bool *m_checkList;
+
+	//List of vertices to assign to a mass
 	list<int> m_verticesToAssign;
 };
 

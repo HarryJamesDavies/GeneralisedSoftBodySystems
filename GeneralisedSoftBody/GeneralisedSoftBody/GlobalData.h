@@ -17,6 +17,10 @@
 
 using std::unique_ptr;
 
+//=================================================================
+// Any data pssed from system to system is stored here
+//=================================================================
+
 struct GlobalData
 {
 	GlobalData() = default;
@@ -41,8 +45,6 @@ struct GlobalData
 	//Holds all game objects
 	unique_ptr<GameObjectPool> m_gameObjectPool;
 
-	unique_ptr<PhysicsManager> m_physicsManager;
-
 	//Window size
 	UINT m_width;
 	UINT m_height;
@@ -55,7 +57,9 @@ struct GlobalData
 	//amount of time since the game started
 	DWORD m_playTime;
 
+	//System managers
 	unique_ptr<MSOManager> m_MSOManager;
 	unique_ptr<GUIManager> m_GUIManager;
+	unique_ptr<PhysicsManager> m_physicsManager;
 };
 #endif;

@@ -1,3 +1,7 @@
+//==============================================================
+//Used in basic spring tests as mass/spring model manager
+//==============================================================
+
 #include "NetManager.h"
 #include "GlobalData.h"
 
@@ -12,6 +16,7 @@ NetManager::~NetManager()
 
 }
 
+//Initialise test net mass/spring structure
 void NetManager::InitNet(string _fileName, ID3D11Device* _pd3dDevice, IEffectFactory* _EF, GlobalData* _GD)
 {
 	//Creates a line of anchors connected to two fixed anchors

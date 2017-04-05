@@ -1,3 +1,7 @@
+//=================================================================
+// Generate polygons based on vertices and indices data
+//=================================================================
+
 #include "TriangulateVertices.h"
 #include "Triangle.h"
 #include "Edge.h"

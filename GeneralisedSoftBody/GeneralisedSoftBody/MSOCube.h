@@ -1,3 +1,7 @@
+//=================================================================
+// Mass/spring cube primitive
+//=================================================================
+
 #ifndef _MSO_CUBE_H_
 #define _MSO_CUBE_H_
 #include "VertexMSO.h"
@@ -9,7 +13,6 @@ public:
 	MSOCube(int _width, int _height, int _depth, Vector3 _numSections, bool _generateInternals, GlobalData* _GD);
 	virtual ~MSOCube();
 
-	//Initialise the Vertex and Index buffers for the cube
 	void Initilaise(bool _generateInternals, ID3D11Device* _ID);
 
 	virtual void Tick(GlobalData* _GD) { VertexMSO::Tick(_GD); };
@@ -18,6 +21,7 @@ public:
 private:
 	void CreateVertices();
 
+	//Dimensions of individual sections
 	int m_width;
 	int m_height;
 	int m_depth;

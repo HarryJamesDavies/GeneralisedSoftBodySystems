@@ -1,3 +1,7 @@
+//=================================================================
+// Base object for all user controlled objects
+//=================================================================
+
 #include "Pawn.h"
 #include "GlobalData.h"
 #include "KeyBinding.h"
@@ -20,6 +24,7 @@ Pawn::~Pawn()
 
 void Pawn::Tick(GlobalData* _GD)
 {
+	//Checks input from the user
 	InputHandler(_GD);
 
 	GameObject::Tick(_GD);
@@ -27,16 +32,19 @@ void Pawn::Tick(GlobalData* _GD)
 	return;
 }
 
+//Base input processer for all user controlled objects
 void Pawn::InputHandler(GlobalData* _GD)
 {
 	auto kb = _GD->m_keyboard->GetState();
 
+	//Controls movement of the pawn object
 	Vector3 forwardMove = -m_speed * _GD->m_dt * Vector3::Forward;
 	Matrix yawMove = Matrix::CreateRotationY(m_yaw + 10.2f);
 	forwardMove = Vector3::Transform(forwardMove, yawMove);
+
+	//Checks for displacement inputs
 	if (kb.IsKeyDown(KeyBinding::Forward))
 	{
-		//harry is a mong face
 		m_pos += forwardMove;
 	}
 	else if (kb.IsKeyDown(KeyBinding::Backward))
@@ -54,6 +62,7 @@ void Pawn::InputHandler(GlobalData* _GD)
 		m_pos -= upMove;
 	}
 
+	//Checks for rotation inputs
 	Vector3 rightMove = -m_speed * _GD->m_dt * Vector3::Right;
 	rightMove = Vector3::Transform(rightMove, yawMove);
 	if (kb.IsKeyDown(KeyBinding::Right))
@@ -75,6 +84,7 @@ void Pawn::InputHandler(GlobalData* _GD)
 		m_yaw -= rotMove;
 	}
 
+	//Prevents excessive movement distance
 	float length = m_pos.Length();
 	float maxLength = 500.0f;
 	if (length > maxLength)

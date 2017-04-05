@@ -1,3 +1,7 @@
+//=================================================================
+//Base Game Object drawn using a Vertex and Index Buffer
+//=================================================================
+
 #include "VertexGO.h"
 #include "d3dcompiler.h"
 #include "DDSTextureLoader.h"
@@ -14,9 +18,6 @@
 #define DESTROY( x ) if( x ){ x->Release(); x = nullptr;}
 #define D3D_COMPILE_STANDARD_FILE_INCLUDE ((ID3DInclude*)(UINT_PTR)1)
 
-//the base Game Object drawn using a Vertex and Index Buffer
-//all of the main aspects of drawing it have a default which is pointed to by a static pointer
-//this is only used if the version for this object is not set to nullptr
 
 //default vertexshader
 ID3D11VertexShader*			VertexGO::s_pVertexShader = nullptr;
@@ -53,14 +54,11 @@ VertexGO::VertexGO()
 	m_pRasterState = nullptr;
 
 	m_topology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-
-	//NOTE WE DON'T CREATE ANYTHING HERE
-	//WHATEVER INHERITS THIS WILL DO THAT
 }
 
 VertexGO::~VertexGO()
 {
-	//BUT WE DO TIDY THEM AWAY
+
 	DESTROY(m_VertexBuffer);
 	DESTROY(m_IndexBuffer);
 	DESTROY(m_pVertexShader);
@@ -68,7 +66,6 @@ VertexGO::~VertexGO()
 	DESTROY(m_pPixelShader);
 	DESTROY(m_pTextureRV);
 	DESTROY(m_pConstantBuffer);
-	//if (m_pCB) delete m_pCB; delete this where created as there will know its type
 	DESTROY(m_pSampler);
 	DESTROY(m_pRasterState);
 }

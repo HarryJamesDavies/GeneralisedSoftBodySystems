@@ -1,3 +1,7 @@
+//=================================================================
+// A camera that will follow a specific obejct at a distance away
+//=================================================================
+
 #ifndef _FOLLOW_CAMERA_H_
 #define _FOLLOW_CAMERA_H_
 #include "Camera.h"

@@ -1,9 +1,14 @@
+//=================================================================
+// Triangle structure used inconjunction with vertices and indices to define meshes
+//=================================================================
+
 #ifndef _TRIANGLE_H_
 #define _TRIANGLE_H_
 #include <list>
 
 class Edge;
 
+//List of vertices that share postion with own vertices
 struct SharedVertexData
 {
 	std::list<int> m_vertex1;
@@ -47,6 +52,7 @@ public:
 
 	int m_index;
 
+	//Edges within the triangle
 	Edge* m_edge1;
 	Edge* m_edge2;
 	Edge* m_edge3;
@@ -55,6 +61,7 @@ public:
 
 	SharedVertexData m_vertexData;
 
+	//Returns a specific list of shared vertex indices
 	std::list<int>* GetVertexList(int _index)
 	{
 		switch (_index)
@@ -78,9 +85,6 @@ public:
 			break;
 		}
 	}
-
-private:
-
 };
 
 #endif;

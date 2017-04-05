@@ -1,3 +1,7 @@
+//=================================================================
+// Container for two vertices and identifiers of the neighbouring triangles
+//=================================================================
+
 #ifndef _EDGE_H_
 #define _EDGE_H_
 
@@ -16,12 +20,15 @@ public:
 	Vertex* m_vertex1;
 	Vertex* m_vertex2;
 
+	//Indices of vertices within the triangle
 	int m_localVertex1Index;
 	int m_localVertex2Index;
 
+	//Index of triangle adjacent to the edge and shared edge within the triangle
 	int m_neighbouringTriangleIndex = -1;
 	int m_sharedEdgeIndex = -1;
 
+	//Triangle the edge belongs to
 	Triangle* m_triangle;
 
 private:

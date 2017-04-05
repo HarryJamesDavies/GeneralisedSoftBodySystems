@@ -1,3 +1,7 @@
+//=================================================================
+// Player object that adds physical aspects
+//=================================================================
+
 #pragma once
 #include "Pawn.h"
 #include "GlobalData.h"
@@ -13,6 +17,9 @@ public:
 	void Tick(GlobalData* _GD);
 
 private:
+	//Collisions field
 	ForceField* m_forceField;
+
+	//Visible mesh
 	MeshGO* m_mesh;
 };

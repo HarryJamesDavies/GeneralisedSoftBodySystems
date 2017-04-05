@@ -1,3 +1,7 @@
+//=================================================================
+// Contains set of three masses used to construct mass triangle
+//=================================================================
+
 #include "MSTriangle.h"
 
 //Check whether triangle contains both _massA and _massB.

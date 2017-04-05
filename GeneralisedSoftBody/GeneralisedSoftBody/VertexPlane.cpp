@@ -1,3 +1,7 @@
+//=================================================================
+// Vertex based plane object
+//=================================================================
+
 #include "VertexPlane.h"
 #include "GlobalData.h"
 #include "PhysicsData.h"
@@ -8,6 +12,8 @@ VertexPlane::VertexPlane(int _width, int _height, Vector2 _numSections, ID3D11De
 	m_name = "Plane";
 	m_tag = ObjectTag::OT_NULL;
 	m_layer = ObjectLayer::OL_NULL;
+
+	SetScale(1.0f);
 
 	m_width = _width;
 	m_height = _height;
@@ -24,6 +30,7 @@ void VertexPlane::init(ID3D11Device* _ID)
 {
 	CreateVertices();
 
+	//Builds GPU Buffers
 	BuildDIB(_ID, m_indices);
 	BuildDVB(_ID, m_numVerts, m_vertices);
 
@@ -46,21 +53,20 @@ void VertexPlane::init(ID3D11Device* _ID)
 
 void VertexPlane::CreateVertices()
 {
-	SetScale(1.0f);
-
-	//calculate number of vertices and primatives
+	//Calculate number of vertices and primatives
 	m_numVerts = static_cast<int>(6 * (m_numSections.x) * (m_numSections.y));
 	m_numPrims = m_numVerts / 3;
 	m_vertices = new Vertex[m_numVerts];
 	m_indices = new WORD[m_numVerts];
 
-	//as using the standard VB shader set the tex-coords somewhere safe
+	//Using the standard VB shader set the tex-coords
 	for (int i = 0; i < m_numVerts; i++)
 	{
 		m_indices[i] = i;
 		m_vertices[i].texCoord = Vector2::One;
 	}
 
+	//Generates columns then rows of square two polygons at a time
 	int vert = 0;
 
 	for (int y = 0; y < m_numSections.y; y++)
@@ -88,14 +94,14 @@ void VertexPlane::CreateVertices()
 
 void VertexPlane::CalculateNormals()
 {
-	//calculate the normals for the basic lighting in the base shader
+	//Calculate the normals for the basic lighting in the base shader
 	for (UINT i = 0; i < m_numPrims; i++)
 	{
 		WORD V1 = 3 * i;
 		WORD V2 = 3 * i + 1;
 		WORD V3 = 3 * i + 2;
 
-		//build normals
+		//Build normals
 		Vector3 norm;
 		Vector3 vec1 = m_vertices[V1].Pos - m_vertices[V2].Pos;
 		Vector3 vec2 = m_vertices[V3].Pos - m_vertices[V2].Pos;
